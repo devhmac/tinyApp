@@ -8,7 +8,11 @@ const urlDatabase = {
 }
 //handles root
 app.get("/", (req, res) => {
-  res.send('<html><body><h1>Hello World!</h1></body></html>\n');
+  res.send('<html><body><h1>Hello Root!/h1></body></html>\n');
+});
+
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/urls.json", (req, res) => {
