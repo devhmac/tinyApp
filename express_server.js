@@ -23,19 +23,19 @@ app.get('/urls', (req, res) => {
   //using route parameter for specific urls
 });
 
-app.get('/urls/:shortURL', (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] }
-  res.render('urls_show', templateVars);
-});
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render(urls_new)
+  res.render('urls_new');
 })
 
+app.get('/urls/:shortURL', (req, res) => {
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] }
+  res.render('urls_show', templateVars);
+});
 
 
 app.listen(PORT, () => {
