@@ -8,6 +8,12 @@ app.set("view engine", "ejs");
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//gen random string for shortURL
+const generateRandomString = () => {
+  return Math.random().toString(20).substr(2, 6)
+}
+
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -35,9 +41,12 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls/new", (req, res) => {
   res.render('urls_new');
 })
+
+//post handler for new url form
 app.post("/urls", (req, res) => {
   console.log(req.body);
   res.send("Ok");
+  urlDatabase[generateRandomString()] = req.body.longURL;
 })
 
 app.get('/urls/:shortURL', (req, res) => {
