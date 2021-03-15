@@ -32,9 +32,10 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-if (i > 1) {
-  dsf
-}
+app.get("/urls/new", (req, res) => {
+  res.render(urls_new)
+})
+
 
 
 app.listen(PORT, () => {
