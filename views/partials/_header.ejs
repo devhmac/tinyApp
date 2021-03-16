@@ -12,10 +12,12 @@
       </div>
     </div>
     <% if(username) { %>
-      <h4 class="nav-item nav-link">
-        <%= username %>
-      </h4>
-      <button class="btn btn-danger">Logout</button>
+      <form action="/logout" class="form-inline" method="POST">
+        <a class="navbar-brand">
+          <%= username %>
+        </a>
+        <button type="submit" class="btn btn-danger">Logout</button>
+      </form>
       <% } %>
         <% if(username===undefined) { %>
           <form action="/login" class="form-inline" method="POST">
