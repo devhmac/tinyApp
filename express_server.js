@@ -44,7 +44,7 @@ app.get("/urls/new", (req, res) => {
 
 //post handler for new url form
 app.post("/urls", (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
@@ -54,6 +54,14 @@ app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] }
   res.render('urls_show', templateVars);
 });
+
+//will forward to LongURL based on short URL, if short url exists in urlDatabase
+app.get('/u/:shortURL', (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.send('That was not a valid shortened url')
+  }
+  res.redirect(urlDatabase[req.params.shortURL]);
+})
 
 
 app.listen(PORT, () => {
