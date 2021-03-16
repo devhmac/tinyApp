@@ -46,7 +46,6 @@ app.get("/hello", (req, res) => {
 app.get('/urls', (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render('urls_index', templateVars);
-  //using route parameter for specific urls
 });
 
 app.get("/urls.json", (req, res) => {
@@ -96,6 +95,9 @@ app.get('/u/:shortURL', (req, res) => {
   }
   res.redirect(urlDatabase[req.params.shortURL]);
 })
+app.get('*', (req, res) => {
+  res.render('invalid_short');
+});
 
 
 app.listen(PORT, () => {
