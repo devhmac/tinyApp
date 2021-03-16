@@ -103,6 +103,11 @@ app.post('/login', (req, res) => {
   res.redirect('/urls');
 });
 
+//POST handler for /logout
+app.post('/logout', (req, res) => {
+
+})
+
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
