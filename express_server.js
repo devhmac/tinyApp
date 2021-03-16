@@ -52,14 +52,17 @@ app.post("/urls", (req, res) => {
 
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] }
+  if (!urlDatabase[req.params.shortURL]) {
+    res.render('error')
+  }
   res.render('urls_show', templateVars);
 });
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
-  if (!urlDatabase[req.params.shortURL]) {
-    res.send('That was not a valid shortened url')
-  }
+  // if (!urlDatabase[req.params.shortURL]) {
+  //   res.render('error')
+  // }
   res.redirect(urlDatabase[req.params.shortURL]);
 })
 
