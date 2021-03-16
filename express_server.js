@@ -86,6 +86,11 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls');
 });
 
+//POST handler for /login
+app.post('/login', (req, res) => {
+
+})
+
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
@@ -93,7 +98,7 @@ app.get('/u/:shortURL', (req, res) => {
     return;
   }
   res.redirect(urlDatabase[req.params.shortURL]);
-}):
+});
 
 app.get('*', (req, res) => {
   res.render('invalid_short');
