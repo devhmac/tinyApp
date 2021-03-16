@@ -13,9 +13,10 @@
     </div>
     <% if(username) { %>
       <form action="/logout" class="form-inline" method="POST">
-        <a class="navbar-brand">
+        <span class="navbar-text" style="margin-right: 0.2rem;">Logged in as: </span>
+        <span class="navbar-brand">
           <%= username %>
-        </a>
+        </span>
         <button type="submit" class="btn btn-danger">Logout</button>
       </form>
       <% } %>
