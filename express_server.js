@@ -76,8 +76,7 @@ app.get('/urls/:shortURL', (req, res) => {
 
 
 //post handler for editing longurl
-app.post('/urls/:shortURL/update', (req, res) => {
-  console.log(req.body.updateURL)
+app.post('/urls/:shortURL', (req, res) => {
   urlDatabase[req.params.shortURL] = req.body.updateURL
   res.redirect(`/urls/${req.params.shortURL}`);
 })
