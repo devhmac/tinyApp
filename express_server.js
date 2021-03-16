@@ -13,11 +13,27 @@ const generateRandomString = () => {
   return Math.random().toString(20).substr(2, 6)
 }
 
-
+// database object
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 }
+
+//users object
+const users = {
+  'userRandomID': {
+    id: "userRandomID",
+    email: 'user@example.com',
+    password: 'purple-monkey-dinosaur'
+  },
+  'user2RandomID': {
+    id: 'user2RandomID',
+    email: 'user2@example.com',
+    password: 'dishwasher-funk'
+  }
+};
+
+
 //handles root
 app.get("/", (req, res) => {
   res.send('<html><body><h1>Hello Root!</h1></body></html>\n');
