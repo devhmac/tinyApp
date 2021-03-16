@@ -76,6 +76,10 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+//GET for registration
+app.get('/register', (req, res) => {
+  res.render('registration')
+})
 //post handler for new url form
 app.post("/urls", (req, res) => {
   //console.log(req.body);
