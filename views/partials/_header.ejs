@@ -11,9 +11,15 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <form action="/login" class="form-inline" method="POST">
-      <input type="text" name="username" id="" placeholder="Username">
-      <input type='submit' class="btn btn-success">
-    </form>
+    <% if(username) { %>
+      <h4 class="navbar-text">
+        <%= username %>
+      </h4>
+      <% } %>
+        <form action="/login" class="form-inline" method="POST">
+
+          <input type="text" name="username" id="" placeholder="Username" class="form-control me-2">
+          <button type="submit" class="btn btn-warning">Login</button>
+        </form>
   </nav>
 </header>
