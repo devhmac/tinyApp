@@ -33,7 +33,6 @@ app.get('/urls', (req, res) => {
   //using route parameter for specific urls
 });
 
-
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
