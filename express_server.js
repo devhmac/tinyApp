@@ -5,7 +5,7 @@ const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //gen random string for shortURL
@@ -53,16 +53,16 @@ app.post("/urls", (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] }
   if (!urlDatabase[req.params.shortURL]) {
-    res.render('error')
+    res.render('invalid_short')
   }
   res.render('urls_show', templateVars);
 });
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
-  // if (!urlDatabase[req.params.shortURL]) {
-  //   res.render('error')
-  // }
+  if (!urlDatabase[req.params.shortURL]) {
+    res.render('invalid_short')
+  }
   res.redirect(urlDatabase[req.params.shortURL]);
 })
 
