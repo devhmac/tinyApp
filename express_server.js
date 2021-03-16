@@ -65,12 +65,6 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-//post handler for delete
-app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect('/urls');
-})
-
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] }
   if (!urlDatabase[req.params.shortURL]) {
@@ -79,6 +73,21 @@ app.get('/urls/:shortURL', (req, res) => {
   }
   res.render('urls_show', templateVars);
 });
+
+
+//post handler for editing longurl
+app.post('/urls/:shortURL/update', (req, res) => {
+  console.log(req.body.updateURL)
+  urlDatabase[req.params.shortURL] = req.body.updateURL
+  res.redirect(`/urls/${req.params.shortURL}`);
+})
+
+//post handler for delete
+app.post('/urls/:shortURL/delete', (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect('/urls');
+})
+
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
