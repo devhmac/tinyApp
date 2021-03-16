@@ -88,8 +88,10 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 
 //POST handler for /login
 app.post('/login', (req, res) => {
-
-})
+  let loginName = req.body.username;
+  res.cookie(loginName);
+  res.redirect('/urls');
+});
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
