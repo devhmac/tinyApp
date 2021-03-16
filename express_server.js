@@ -66,14 +66,7 @@ app.get("/urls/new", (req, res) => {
   res.render('urls_new', templateVars);
 })
 
-//post handler for new url form
-app.post("/urls", (req, res) => {
-  //console.log(req.body);
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);
-});
-
+//GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"] }
   if (!urlDatabase[req.params.shortURL]) {
@@ -83,6 +76,13 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+//post handler for new url form
+app.post("/urls", (req, res) => {
+  //console.log(req.body);
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`);
+});
 
 //post handler for editing longurl
 app.post('/urls/:shortURL', (req, res) => {
@@ -105,7 +105,8 @@ app.post('/login', (req, res) => {
 
 //POST handler for /logout
 app.post('/logout', (req, res) => {
-
+  res.clearCookie('username');
+  res.redirect('/urls');
 })
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
