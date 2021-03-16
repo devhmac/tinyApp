@@ -84,8 +84,7 @@ app.post('/urls/:shortURL', (req, res) => {
 app.post('/urls/:shortURL/delete', (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls');
-})
-
+});
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
@@ -94,7 +93,8 @@ app.get('/u/:shortURL', (req, res) => {
     return;
   }
   res.redirect(urlDatabase[req.params.shortURL]);
-})
+}):
+
 app.get('*', (req, res) => {
   res.render('invalid_short');
 });
