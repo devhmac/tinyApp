@@ -64,7 +64,10 @@ app.get('/login', (req, res) => {
   res.render('login', templateVars)
 })
 
+//GET for URLS
 app.get('/urls', (req, res) => {
+
+  //should only push urls with the id === cookies.user_id
   const templateVars = {
     urls: urlDatabase,
     user_id: req.cookies['user_id'],
@@ -88,16 +91,16 @@ app.get("/urls/new", (req, res) => {
 
 //GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.status(404);
+    res.render('invalid_short');
+    return;
+  }
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL,
     user_id: req.cookies['user_id'],
     users
-  }
-  if (!urlDatabase[req.params.shortURL]) {
-    res.status(404);
-    res.render('invalid_short');
-    return;
   }
   res.render('urls_show', templateVars);
 });
