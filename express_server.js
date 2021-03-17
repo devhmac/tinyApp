@@ -80,6 +80,20 @@ app.get('/urls/:shortURL', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('registration')
 })
+
+//POST for registration
+app.post('/register', (req, res) => {
+  const randID = generateRandomString();
+  users[randID] = {
+    id: randID,
+    email: req.body.email,
+    password: req.body.password
+  };
+  console.log(users);
+
+  res.redirect('/urls');
+});
+
 //post handler for new url form
 app.post("/urls", (req, res) => {
   //console.log(req.body);
