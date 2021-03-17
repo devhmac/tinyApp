@@ -10,8 +10,6 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
