@@ -21,13 +21,10 @@
       </form>
       <% } %>
         <% if(!users[user_id]) { %>
-          <form action="/login" class="form-inline" method="POST">
-            <div class="form-group">
-              <input type="text" name="username" id="" placeholder="Username" class="form-control me-2"
-                style="width: 150px; margin: 0.5em">
-              <button type="submit" class="btn btn-secondary">Login</button>
-            </div>
-          </form>
+          <div class="navbar-nav">
+            <a href="/login" class="nav-item nav-link"> Login </a>
+            <a href="/register" class="nav-item nav-link"> Register </a>
+          </div>
           <% } %>
   </nav>
 </header>

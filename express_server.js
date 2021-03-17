@@ -9,12 +9,12 @@ app.set("view engine", "ejs");
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 //for req.cookies
-app.use(cookieParser())
+app.use(cookieParser());
 
 
 //gen random string for shortURL
 const generateRandomString = () => {
-  return Math.random().toString(20).substr(2, 6)
+  return Math.random().toString(20).substr(2, 6);
 }
 const doesKeyExistInUsers = (key, variable) => {
   for (let user in users) {
@@ -55,6 +55,10 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+//GET Login
+app.get('/login', (req, res) => {
+  res.render('login')
+})
 
 app.get('/urls', (req, res) => {
   const templateVars = {
@@ -118,6 +122,7 @@ app.post('/register', (req, res) => {
     password: req.body.password
   };
   res.cookie('user_id', users[randID].id);
+  console.log(users)
   res.redirect('/urls');
 });
 
@@ -142,9 +147,19 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 
 //POST handler for /login
 app.post('/login', (req, res) => {
-  let loginName = req.body.username;
-  res.cookie('username', loginName);
-  res.redirect('/urls');
+  let loginEmail = req.body.email;
+  let loginPass = req.body.password;
+
+  //dry up this code with a function
+  for (let user in users) {
+    if (users[user].email === loginEmail && users[user].password === loginPass) {
+      res.cookie('user_id', users[user].id);
+      res.redirect('/urls');
+    }
+  }
+  res.status(403)
+  res.send(`status code: ${res.statusCode} Incorrect Username or password`);
+  return;
 });
 
 //POST handler for /logout
