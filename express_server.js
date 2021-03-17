@@ -112,7 +112,7 @@ app.post('/register', (req, res) => {
   }
   if (req.body.email.length < 1 || req.body.password.length < 1) {
     res.status(400)
-    res.send(`status code: ${res.statusCode} You must register with a username and password`);
+    res.send(`status code: ${res.statusCode} You must register with a valid Email and password`);
     return;
   }
   const randID = generateRandomString();
@@ -158,7 +158,7 @@ app.post('/login', (req, res) => {
     }
   }
   res.status(403)
-  res.send(`status code: ${res.statusCode} Incorrect Username or password`);
+  res.send(`status code: ${res.statusCode} Incorrect Email or password`);
   return;
 });
 
