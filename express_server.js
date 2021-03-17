@@ -72,8 +72,14 @@ app.get("/urls/new", (req, res) => {
 
 //GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user_id: req.cookies['user_id'], users }
+  const templateVars = {
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL],
+    user_id: req.cookies['user_id'],
+    users
+  }
   if (!urlDatabase[req.params.shortURL]) {
+    res.status(404);
     res.render('invalid_short');
     return;
   }
@@ -87,6 +93,14 @@ app.get('/register', (req, res) => {
 
 //POST for registration
 app.post('/register', (req, res) => {
+  for (let user in users) {
+    if (users[user].email === req.body.email) {
+      res.status(400)
+      res.send(`status code: ${res.statusCode} email already in use`);
+      return;
+    }
+  }
+
   const randID = generateRandomString();
   users[randID] = {
     id: randID,
@@ -94,16 +108,12 @@ app.post('/register', (req, res) => {
     password: req.body.password
   };
   res.cookie('user_id', users[randID].id);
-  console.log(users);
-  //need to pass cookie id and 
-  console.log(req.cookies['user_id'])
 
   res.redirect('/urls');
 });
 
 //post handler for new url form
 app.post("/urls", (req, res) => {
-  //console.log(req.body);
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
@@ -137,6 +147,7 @@ app.post('/logout', (req, res) => {
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
+    res.status(404);
     res.render('invalid_short');
     return;
   }
