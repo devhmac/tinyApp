@@ -108,6 +108,11 @@ app.get('/register', (req, res) => {
     user_id: req.cookies['user_id'],
     users
   }
+  //if already logged in, redirect to /urls
+  if (req.cookies['user_id']) {
+    res.redirect('/urls');
+    return;
+  }
   res.render('registration', templateVars)
 })
 
@@ -159,11 +164,13 @@ app.post('/login', (req, res) => {
   let loginPass = req.body.password;
 
   //dry up this code with a function
-  for (let user in users) {
-    if (users[user].email === loginEmail && users[user].password === loginPass) {
-      res.cookie('user_id', users[user].id);
-      res.redirect('/urls');
-      return;
+  if (loginEmail && loginPass) {
+    for (let user in users) {
+      if (users[user].email === loginEmail && users[user].password === loginPass) {
+        res.cookie('user_id', users[user].id);
+        res.redirect('/urls');
+        return;
+      }
     }
   }
   res.status(403)
