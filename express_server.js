@@ -176,8 +176,13 @@ app.post('/urls/:shortURL', (req, res) => {
 
 //post handler for delete
 app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect('/urls');
+  if (urlDatabase[req.params.shortURL].userID === req.cookies['user_id']) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect('/urls');
+    return;
+  }
+  res.status(401)
+  res.render('invalid_short')
 });
 
 //POST handler for /login
