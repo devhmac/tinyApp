@@ -84,7 +84,6 @@ app.get('/urls', (req, res) => {
     user_id: req.cookies['user_id'],
     users
   };
-  console.log(templateVars.urls);
 
   res.render('urls_index', templateVars);
 });
@@ -153,13 +152,15 @@ app.post('/register', (req, res) => {
     return;
   }
   const randID = generateRandomString();
+  const hashedPass = bcrypt.hashSync(req.body.password, 10);
+
   users[randID] = {
     id: randID,
     email: req.body.email,
-    password: req.body.password
+    password: hashedPass
   };
   res.cookie('user_id', users[randID].id);
-  console.log(users)
+  //console.log(users)
   res.redirect('/urls');
 });
 
@@ -207,7 +208,7 @@ app.post('/login', (req, res) => {
   //dry up this code with a function
   if (loginEmail && loginPass) {
     for (let user in users) {
-      if (users[user].email === loginEmail && users[user].password === loginPass) {
+      if (users[user].email === loginEmail && bcrypt.compareSync(loginPass, users[user].password)) {
         res.cookie('user_id', users[user].id);
         res.redirect('/urls');
         return;
