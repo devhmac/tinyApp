@@ -11,7 +11,11 @@ app.set("view engine", "ejs");
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 //for req.cookies
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: [],
+}))
 
 
 //gen random string for shortURL
@@ -71,7 +75,7 @@ app.get("/hello", (req, res) => {
 //GET Login
 app.get('/login', (req, res) => {
   const templateVars = {
-    user_id: req.cookies['user_id'],
+    user_id: req.session.user_id,
     users
   }
   res.render('login', templateVars)
@@ -160,7 +164,7 @@ app.post('/register', (req, res) => {
     email: req.body.email,
     password: hashedPass
   };
-  res.cookie('user_id', users[randID].id);
+  res.session.user_id = users[randID].id;
   //console.log(users)
   res.redirect('/urls');
 });
