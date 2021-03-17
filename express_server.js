@@ -106,7 +106,7 @@ app.post('/register', (req, res) => {
     res.send(`status code: ${res.statusCode} email already in use`);
     return;
   }
-  if (req.body.email.length < 1 || req.body.password < 1) {
+  if (req.body.email.length < 1 || req.body.password.length < 1) {
     res.status(400)
     res.send(`status code: ${res.statusCode} You must register with a username and password`);
     return;
