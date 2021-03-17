@@ -106,18 +106,23 @@ app.get("/urls/new", (req, res) => {
 
 //GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
-  if (!urlDatabase[req.params.shortURL]) {
-    res.status(404);
-    res.render('invalid_short');
-    return;
+  if (urlDatabase[req.params.shortURL].userID === req.cookies['user_id']) {
+    if (!urlDatabase[req.params.shortURL]) {
+      res.status(404);
+      res.render('invalid_short');
+      return;
+    }
+    const templateVars = {
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL].longURL,
+      user_id: req.cookies['user_id'],
+      users
+    }
+    res.render('urls_show', templateVars);
+    return
   }
-  const templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL,
-    user_id: req.cookies['user_id'],
-    users
-  }
-  res.render('urls_show', templateVars);
+  res.status(401)
+  res.render('invalid_short')
 });
 
 //GET for registration
