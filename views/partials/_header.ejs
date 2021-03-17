@@ -20,7 +20,7 @@
         <button type="submit" class="btn btn-danger">Logout</button>
       </form>
       <% } %>
-        <% if(username===undefined) { %>
+        <% if(!username) { %>
           <form action="/login" class="form-inline" method="POST">
             <div class="form-group">
               <input type="text" name="username" id="" placeholder="Username" class="form-control me-2"
