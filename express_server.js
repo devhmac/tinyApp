@@ -57,7 +57,11 @@ app.get("/hello", (req, res) => {
 
 //GET Login
 app.get('/login', (req, res) => {
-  res.render('login')
+  const templateVars = {
+    user_id: req.cookies['user_id'],
+    users
+  }
+  res.render('login', templateVars)
 })
 
 app.get('/urls', (req, res) => {
