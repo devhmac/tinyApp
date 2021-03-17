@@ -15,7 +15,7 @@ app.use(cookieParser());
 //gen random string for shortURL
 const generateRandomString = () => {
   return Math.random().toString(20).substr(2, 6);
-}
+};
 const doesKeyExistInUsers = (key, variable) => {
   for (let user in users) {
     if (users[user][key] === variable) {
@@ -23,13 +23,23 @@ const doesKeyExistInUsers = (key, variable) => {
     }
   }
   return false;
-}
+};
+//returns object of urls which match the cookie user_id
+const urlsForUser = (id) => {
+  const userUrls = {};
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userID === id) {
+      userUrls[url] = urlDatabase[url];
+    }
+  }
+  return userUrls;
+};
 
 // database object
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: 'defaut' },
   "9sm5xK": { longURL: "http://www.google.com", userID: 'default' }
-}
+};
 
 
 //users object
@@ -67,20 +77,13 @@ app.get('/login', (req, res) => {
 
 //GET for URLS
 app.get('/urls', (req, res) => {
-  // should only push urls with the id === cookies.user_id
+  //templatevars.urls updated based on cookie ID
   const templateVars = {
-    urls: {},
+    urls: urlsForUser(req.cookies['user_id']),
     user_id: req.cookies['user_id'],
     users
   };
-
-  //dynamically update templateVars.urls based on userID match
-  for (let url in urlDatabase) {
-    if (urlDatabase[url].userID === req.cookies['user_id']) {
-      templateVars.urls[url] = urlDatabase[url]
-    }
-  }
-
+  console.log(templateVars.urls);
 
   res.render('urls_index', templateVars);
 });
