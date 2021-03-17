@@ -151,7 +151,7 @@ app.post("/urls", (req, res) => {
 
 //post handler for editing longurl
 app.post('/urls/:shortURL', (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.updateURL
+  urlDatabase[req.params.shortURL].longURL = req.body.updateURL
   res.redirect(`/urls/${req.params.shortURL}`);
 })
 
