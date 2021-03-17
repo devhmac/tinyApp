@@ -31,6 +31,7 @@ const urlDatabase = {
   "9sm5xK": { longURL: "http://www.google.com", userID: 'default' }
 }
 
+
 //users object
 const users = {
   'userRandomID': {
@@ -66,13 +67,20 @@ app.get('/login', (req, res) => {
 
 //GET for URLS
 app.get('/urls', (req, res) => {
-
-  //should only push urls with the id === cookies.user_id
+  // should only push urls with the id === cookies.user_id
   const templateVars = {
-    urls: urlDatabase,
+    urls: {},
     user_id: req.cookies['user_id'],
     users
   };
+
+  //dynamically update templateVars.urls based on userID match
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userID === req.cookies['user_id']) {
+      templateVars.urls[url] = urlDatabase[url]
+    }
+  }
+
 
   res.render('urls_index', templateVars);
 });
