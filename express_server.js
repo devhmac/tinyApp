@@ -27,8 +27,8 @@ const doesKeyExistInUsers = (key, variable) => {
 
 // database object
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: 'defaut' },
+  "9sm5xK": { longURL: "http://www.google.com", userID: 'default' }
 }
 
 //users object
@@ -90,7 +90,7 @@ app.get("/urls/new", (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL].longURL,
     user_id: req.cookies['user_id'],
     users
   }
@@ -142,7 +142,10 @@ app.post('/register', (req, res) => {
 //post handler for new url form
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = {
+    longURL: req.body.longURL, userID: req.cookies['user_ID']
+  };
+  console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -191,7 +194,7 @@ app.get('/u/:shortURL', (req, res) => {
     res.render('invalid_short');
     return;
   }
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.shortURL].longURL);
 });
 
 app.get('*', (req, res) => {
