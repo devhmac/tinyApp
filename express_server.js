@@ -170,8 +170,13 @@ app.post("/urls", (req, res) => {
 
 //post handler for editing longurl
 app.post('/urls/:shortURL', (req, res) => {
-  urlDatabase[req.params.shortURL].longURL = req.body.updateURL
-  res.redirect(`/urls/${req.params.shortURL}`);
+  if (urlDatabase[req.params.shortURL].userID === req.cookies['user_id']) {
+    urlDatabase[req.params.shortURL].longURL = req.body.updateURL
+    res.redirect(`/urls/${req.params.shortURL}`);
+    return;
+  }
+  res.status(401)
+  res.render('invalid_short')
 })
 
 //post handler for delete
