@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -10,11 +10,11 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
-//for req.cookies
-//app.use(cookieParser());
+
+
 app.use(cookieSession({
   name: 'session',
-  keys: [],
+  keys: ['key1', 'key2'],
 }))
 
 
@@ -85,8 +85,8 @@ app.get('/login', (req, res) => {
 app.get('/urls', (req, res) => {
   //templatevars.urls updated based on cookie ID
   const templateVars = {
-    urls: urlsForUser(req.cookies['user_id']),
-    user_id: req.cookies['user_id'],
+    urls: urlsForUser(req.session.user_id),
+    user_id: req.session.user_id,
     users
   };
 
@@ -98,12 +98,12 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if (!req.cookies['user_id']) {
+  if (!req.session.user_id) {
     res.redirect('/login');
     return;
   }
   const templateVars = {
-    user_id: req.cookies['user_id'],
+    user_id: req.session.user_id,
     users
   }
   res.render('urls_new', templateVars);
@@ -111,7 +111,7 @@ app.get("/urls/new", (req, res) => {
 
 //GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies['user_id']) {
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     if (!urlDatabase[req.params.shortURL]) {
       res.status(404);
       res.render('invalid_short');
@@ -120,7 +120,7 @@ app.get('/urls/:shortURL', (req, res) => {
     const templateVars = {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
-      user_id: req.cookies['user_id'],
+      user_id: req.session.user_id,
       users
     }
     res.render('urls_show', templateVars);
@@ -133,11 +133,11 @@ app.get('/urls/:shortURL', (req, res) => {
 //GET for registration
 app.get('/register', (req, res) => {
   const templateVars = {
-    user_id: req.cookies['user_id'],
+    user_id: req.session.user_id,
     users
   }
   //if already logged in, redirect to /urls
-  if (req.cookies['user_id']) {
+  if (req.session.user_id) {
     res.redirect('/urls');
     return;
   }
@@ -164,20 +164,20 @@ app.post('/register', (req, res) => {
     email: req.body.email,
     password: hashedPass
   };
-  res.session.user_id = users[randID].id;
+  req.session.user_id = users[randID].id;
   //console.log(users)
   res.redirect('/urls');
 });
 
 //post handler for new url form
 app.post("/urls", (req, res) => {
-  if (!req.cookies['user_id']) {
+  if (!req.session.user_id) {
     res.redirect('/login');
     return;
   }
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = {
-    longURL: req.body.longURL, userID: req.cookies['user_id']
+    longURL: req.body.longURL, userID: req.session.user_id
   };
   console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);
@@ -185,7 +185,7 @@ app.post("/urls", (req, res) => {
 
 //post handler for editing longurl
 app.post('/urls/:shortURL', (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies['user_id']) {
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     urlDatabase[req.params.shortURL].longURL = req.body.updateURL
     res.redirect(`/urls/${req.params.shortURL}`);
     return;
@@ -196,7 +196,7 @@ app.post('/urls/:shortURL', (req, res) => {
 
 //post handler for delete
 app.post('/urls/:shortURL/delete', (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies['user_id']) {
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     delete urlDatabase[req.params.shortURL];
     res.redirect('/urls');
     return;
@@ -214,7 +214,7 @@ app.post('/login', (req, res) => {
   if (loginEmail && loginPass) {
     for (let user in users) {
       if (users[user].email === loginEmail && bcrypt.compareSync(loginPass, users[user].password)) {
-        res.cookie('user_id', users[user].id);
+        req.session.user_id = users[user].id;
         res.redirect('/urls');
         return;
       }
@@ -227,7 +227,7 @@ app.post('/login', (req, res) => {
 
 //POST handler for /logout
 app.post('/logout', (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect('/urls');
 })
 
