@@ -163,6 +163,7 @@ app.post('/login', (req, res) => {
     if (users[user].email === loginEmail && users[user].password === loginPass) {
       res.cookie('user_id', users[user].id);
       res.redirect('/urls');
+      return;
     }
   }
   res.status(403)
