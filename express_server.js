@@ -100,7 +100,11 @@ app.get('/urls/:shortURL', (req, res) => {
 
 //GET for registration
 app.get('/register', (req, res) => {
-  res.render('registration')
+  const templateVars = {
+    user_id: req.cookies['user_id'],
+    users
+  }
+  res.render('registration', templateVars)
 })
 
 //POST for registration
