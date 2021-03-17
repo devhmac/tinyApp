@@ -16,6 +16,14 @@ app.use(cookieParser())
 const generateRandomString = () => {
   return Math.random().toString(20).substr(2, 6)
 }
+const doesKeyExistInUsers = (key, variable) => {
+  for (let user in users) {
+    if (users[user][key] === variable) {
+      return true;
+    }
+  }
+  return false;
+}
 
 // database object
 const urlDatabase = {
@@ -93,14 +101,16 @@ app.get('/register', (req, res) => {
 
 //POST for registration
 app.post('/register', (req, res) => {
-  for (let user in users) {
-    if (users[user].email === req.body.email) {
-      res.status(400)
-      res.send(`status code: ${res.statusCode} email already in use`);
-      return;
-    }
+  if (doesKeyExistInUsers('email', req.body.email)) {
+    res.status(400)
+    res.send(`status code: ${res.statusCode} email already in use`);
+    return;
   }
-
+  if (req.body.email.length < 1 || req.body.password < 1) {
+    res.status(400)
+    res.send(`status code: ${res.statusCode} You must register with a username and password`);
+    return;
+  }
   const randID = generateRandomString();
   users[randID] = {
     id: randID,
@@ -108,7 +118,6 @@ app.post('/register', (req, res) => {
     password: req.body.password
   };
   res.cookie('user_id', users[randID].id);
-
   res.redirect('/urls');
 });
 
