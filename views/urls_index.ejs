@@ -9,25 +9,8 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
-  <style>
-    html {
-      background: #ECE9E6;
-      /* fallback for old browsers */
-      background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6);
-      /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to right, #FFFFFF, #ECE9E6);
-      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    }
 
-    body {
-      background: #ECE9E6;
-      /* fallback for old browsers */
-      background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6);
-      /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to right, #FFFFFF, #ECE9E6);
-      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    }
-  </style>
+  <link rel="stylesheet" href="../stylesheets/main.css">
   <title>URL Index - TinyApp</title>
 </head>
 
@@ -36,39 +19,41 @@
     <%- include('partials/_header') %>
   </header>
   <main style="margin: 1em">
-    <h3>My URLs</h3>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Short URL</th>
-          <th scope="col">Long URL</th>
-          <th scope="col">Edit URL</th>
-          <th scope="col">Delete</th>
-
-        </tr>
-      </thead>
-      <tbody>
-        <% for(let url in urls) { %>
+    <div class="container" style="border: solid;">
+      <h3>My URLs</h3>
+      <table class="table">
+        <thead>
           <tr>
-            <td>
-              <%= url %>
-            </td>
-            <td>
-              <%= urls[url].longURL %>
-            </td>
-            <td>
-              <a href="/urls/<%= url %>" class="btn btn-outline-info">Edit</a>
-            </td>
-            <td>
-              <form action="/urls/<%= url %>/delete?_method=DELETE" method="POST">
-                <button class="btn btn-outline-danger">Delete</button>
-              </form>
-            </td>
+            <th scope="col">Short URL</th>
+            <th scope="col">Long URL</th>
+            <th scope="col">Edit URL</th>
+            <th scope="col">Delete</th>
 
           </tr>
-          <% } %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% for(let url in urls) { %>
+            <tr>
+              <td>
+                <%= url %>
+              </td>
+              <td>
+                <%= urls[url].longURL %>
+              </td>
+              <td>
+                <a href="/urls/<%= url %>" class="btn btn-outline-info">Edit</a>
+              </td>
+              <td>
+                <form action="/urls/<%= url %>/delete?_method=DELETE" method="POST">
+                  <button class="btn btn-outline-danger">Delete</button>
+                </form>
+              </td>
+
+            </tr>
+            <% } %>
+        </tbody>
+      </table>
+    </div>
   </main>
 
   <!-- bootstrap js -->
