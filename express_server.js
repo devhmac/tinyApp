@@ -6,8 +6,14 @@ const bcrypt = require('bcrypt');
 const methodOverride = require('method-override');
 
 //----Helper Functions----//
+
+//gens random 6 char string
 const { generateRandomString } = require('./helpers.js');
+
+//Searches database for email, if found returns matching User object
 const { getUserByEmail } = require('./helpers.js');
+
+//returns object of URL's with user_ID matching the accounts UserID
 const { urlsForUser } = require('./helpers.js');
 
 
@@ -49,6 +55,8 @@ const users = {
 
 
 app.get("/", (req, res) => {
+
+  //if not logged in
   if (!req.session.user_id) {
     res.redirect('/login');
     return;
@@ -56,35 +64,17 @@ app.get("/", (req, res) => {
   res.redirect('/urls');
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
 
-
-app.get('/login', (req, res) => {
-  const incorrectInfo = false;
-  const templateVars = {
-    user_id: req.session.user_id,
-    users,
-    incorrectInfo,
-    notLoggedIn: false
-  };
-  if (req.session.user_id) {
-    res.redirect('/urls');
-    return;
-  }
-  res.render('login', templateVars);
-});
-
-//GET for URLS
 app.get('/urls', (req, res) => {
-  //templatevars.urls updated based on cookie ID
+
+  // templateVars.urls updated based on user -> only displays users URL's
   const templateVars = {
     urls: urlsForUser(req.session.user_id, urlDatabase),
     user_id: req.session.user_id,
     users,
     incorrectInfo: false,
   };
+  // if not logged in
   if (!req.session.user_id) {
     templateVars['notLoggedIn'] = true;
     res.render('login', templateVars);
@@ -110,108 +100,26 @@ app.get("/urls/new", (req, res) => {
 });
 
 //GET URL SHOW from /urls/:shortURL
-app.get('/urls/:shortURL', (req, res) => {
-  if (!urlDatabase[req.params.shortURL]) {
-    res.status(404);
-    res.render('invalid_short');
-    return;
-  }
-  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
-    const templateVars = {
-      shortURL: req.params.shortURL,
-      longURL: urlDatabase[req.params.shortURL].longURL,
-      user_id: req.session.user_id,
-      users
-    };
-    res.render('urls_show', templateVars);
-    return;
-  }
-  res.status(401);
-  res.render('invalid_short');
-});
 
-//GET for registration
-app.get('/register', (req, res) => {
-  const emailInUse = false;
+
+// ---- Login Routes ----//
+
+app.get('/login', (req, res) => {
+  const incorrectInfo = false;
   const templateVars = {
     user_id: req.session.user_id,
     users,
-    emailInUse
+    incorrectInfo,
+    notLoggedIn: false
   };
-  //if already logged in, redirect to /urls
+  //if logged in
   if (req.session.user_id) {
     res.redirect('/urls');
     return;
   }
-  res.render('registration', templateVars);
+  res.render('login', templateVars);
 });
 
-//POST for registration
-app.post('/register', (req, res) => {
-  if (getUserByEmail(req.body.email, users)) {
-    const emailInUse = true;
-    const templateVars = {
-      user_id: req.session.user_id,
-      users,
-      emailInUse
-    };
-    res.status(400);
-    res.render(`registration`, templateVars);
-    return;
-  }
-  if (req.body.email.length < 1 || req.body.password.length < 1) {
-    res.status(400);
-    res.send(`status code: ${res.statusCode} You must register with a valid Email and password`);
-    return;
-  }
-  const randID = generateRandomString();
-  const hashedPass = bcrypt.hashSync(req.body.password, 10);
-
-  users[randID] = {
-    id: randID,
-    email: req.body.email,
-    password: hashedPass
-  };
-  req.session.user_id = users[randID].id;
-  res.redirect('/urls');
-});
-
-//post handler for new url form
-app.post("/urls", (req, res) => {
-  if (!req.session.user_id) {
-    res.redirect('/login');
-    return;
-  }
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = {
-    longURL: req.body.longURL, userID: req.session.user_id
-  };
-  res.redirect(`/urls/${shortURL}`);
-});
-
-//post handler for editing longurl
-app.patch('/urls/:shortURL', (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
-    urlDatabase[req.params.shortURL].longURL = req.body.updateURL;
-    res.redirect(`/urls`);
-    return;
-  }
-  res.status(401);
-  res.render('invalid_short');
-});
-
-//URL deletion
-app.delete('/urls/:shortURL/delete', (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
-    delete urlDatabase[req.params.shortURL];
-    res.redirect('/urls');
-    return;
-  }
-  res.status(401);
-  res.render('invalid_short');
-});
-
-//POST handler for /login
 app.post('/login', (req, res) => {
   let loginEmail = req.body.email;
   let loginPass = req.body.password;
@@ -235,13 +143,123 @@ app.post('/login', (req, res) => {
   return;
 });
 
-//POST handler for /logout
+
 app.delete('/logout', (req, res) => {
   req.session = null;
   res.redirect('/login');
 });
 
-//will forward to LongURL based on short URL, if short url exists in urlDatabase
+// ---- Register Routes ----//
+
+app.get('/register', (req, res) => {
+  const emailInUse = false;
+  const templateVars = {
+    user_id: req.session.user_id,
+    users,
+    emailInUse
+  };
+  //if already logged in, redirect to /urls
+  if (req.session.user_id) {
+    res.redirect('/urls');
+    return;
+  }
+  res.render('registration', templateVars);
+});
+
+
+app.post('/register', (req, res) => {
+  if (getUserByEmail(req.body.email, users)) {
+    const emailInUse = true;
+    const templateVars = {
+      user_id: req.session.user_id,
+      users,
+      emailInUse
+    };
+    res.status(400);
+    res.render(`registration`, templateVars);
+    return;
+  }
+  if (req.body.email.length < 1 || req.body.password.length < 1) {
+    res.status(400);
+    res.send(`status code: ${res.statusCode} You must register with a valid Email and password`);
+    return;
+  }
+  //user creation
+  const randID = generateRandomString();
+  const hashedPass = bcrypt.hashSync(req.body.password, 10);
+
+  users[randID] = {
+    id: randID,
+    email: req.body.email,
+    password: hashedPass
+  };
+  req.session.user_id = users[randID].id;
+  res.redirect('/urls');
+});
+
+// ---- ShortURL Creation ----//
+
+app.post("/urls", (req, res) => {
+  //Login check
+  if (!req.session.user_id) {
+    res.redirect('/login');
+    return;
+  }
+  //New URL addition
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = {
+    longURL: req.body.longURL, userID: req.session.user_id
+  };
+  res.redirect(`/urls/${shortURL}`);
+});
+
+// ---- Specific ShortURL View, Edit, Delete ---- //
+
+app.get('/urls/:shortURL', (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.status(404);
+    res.render('invalid_short');
+    return;
+  }
+  // permissions check
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
+    const templateVars = {
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL].longURL,
+      user_id: req.session.user_id,
+      users
+    };
+    res.render('urls_show', templateVars);
+    return;
+  }
+  res.status(401);
+  res.render('invalid_short');
+});
+
+app.patch('/urls/:shortURL', (req, res) => {
+  // permissions check
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
+    urlDatabase[req.params.shortURL].longURL = req.body.updateURL;
+    res.redirect(`/urls`);
+    return;
+  }
+  res.status(401);
+  res.render('invalid_short');
+});
+
+
+app.delete('/urls/:shortURL/delete', (req, res) => {
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect('/urls');
+    return;
+  }
+  res.status(401);
+  res.render('invalid_short');
+});
+
+// ---- shortURL -> LongURL Redirection ---- //
+
 app.get('/u/:shortURL', (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
     res.status(404);
