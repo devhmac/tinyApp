@@ -14,10 +14,10 @@ TinyApp is a Full-Stack Web application built on Node and Express, allowing user
 <img src=https://user-images.githubusercontent.com/52307383/111699857-44c2eb80-87fe-11eb-82ea-441bc42da220.png width="605">
 
 *Create & Edit URLs*
-Solarized dark             |  Solarized Ocean
+
 :-------------------------:|:-------------------------:
 
-<img src=https://user-images.githubusercontent.com/52307383/111700843-99b33180-87ff-11eb-912a-77dea605f5a6.png width="300"> | 
+<img src=https://user-images.githubusercontent.com/52307383/111700843-99b33180-87ff-11eb-912a-77dea605f5a6.png width="300"> 
 <img src=https://user-images.githubusercontent.com/52307383/111701024-d2530b00-87ff-11eb-8804-30fea0350767.png width="300">
 
 
