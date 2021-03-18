@@ -49,10 +49,9 @@ const users = {
 app.get("/", (req, res) => {
   if (!req.session.user_id) {
     res.redirect('/login');
-
     return;
   }
-  res.redirect('/urls');;
+  res.redirect('/urls');
 });
 
 app.get("/hello", (req, res) => {
@@ -98,12 +97,12 @@ app.get("/urls/new", (req, res) => {
 
 //GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.status(404);
+    res.render('invalid_short');
+    return;
+  }
   if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
-    if (!urlDatabase[req.params.shortURL]) {
-      res.status(404);
-      res.render('invalid_short');
-      return;
-    }
     const templateVars = {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
@@ -197,7 +196,7 @@ app.post('/login', (req, res) => {
   let loginEmail = req.body.email;
   let loginPass = req.body.password;
 
-  //dry up this code with a function
+
   if (getUserByEmail(loginEmail, users)) {
     const loginUser = getUserByEmail(loginEmail, users)
     if (bcrypt.compareSync(loginPass, loginUser.password)) {
