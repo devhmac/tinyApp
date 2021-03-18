@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override');
 
 //----Helper Functions----//
 const { generateRandomString } = require('./helpers.js');
@@ -16,6 +17,7 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
@@ -45,7 +47,7 @@ const users = {
 
 //------ROUTING------//
 
-//handles root
+
 app.get("/", (req, res) => {
   if (!req.session.user_id) {
     res.redirect('/login');
@@ -58,7 +60,7 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//GET Login
+
 app.get('/login', (req, res) => {
   const incorrectInfo = false;
   const templateVars = {
