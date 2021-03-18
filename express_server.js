@@ -60,9 +60,15 @@ app.get("/hello", (req, res) => {
 
 //GET Login
 app.get('/login', (req, res) => {
+  const incorrectInfo = false
   const templateVars = {
     user_id: req.session.user_id,
-    users
+    users,
+    incorrectInfo
+  }
+  if (req.session.user_id) {
+    res.redirect('/urls');
+    return;
   }
   res.render('login', templateVars)
 })
@@ -173,7 +179,7 @@ app.post("/urls", (req, res) => {
 app.post('/urls/:shortURL', (req, res) => {
   if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     urlDatabase[req.params.shortURL].longURL = req.body.updateURL
-    res.redirect(`/urls/${req.params.shortURL}`);
+    res.redirect(`/urls`);
     return;
   }
   res.status(401)
@@ -196,7 +202,6 @@ app.post('/login', (req, res) => {
   let loginEmail = req.body.email;
   let loginPass = req.body.password;
 
-
   if (getUserByEmail(loginEmail, users)) {
     const loginUser = getUserByEmail(loginEmail, users)
     if (bcrypt.compareSync(loginPass, loginUser.password)) {
@@ -205,8 +210,13 @@ app.post('/login', (req, res) => {
       return;
     }
   }
+  const templateVars = {
+    incorrectInfo: true,
+    user_id: req.session.user_id,
+    users,
+  }
   res.status(403)
-  res.send(`status code: ${res.statusCode} Incorrect Email or password`);
+  res.render('login', templateVars);
   return;
 });
 
