@@ -3,6 +3,25 @@
 TinyApp is a Full-Stack Web application built on Node and Express!
 * It allows users to shorten URLs!
 
+## <ins>Features</ins>
+ Secure User Registration and Login system
+  * encrypted cookies
+  * Hashed and Salted passwords
+
+ Account based URL storage
+  * Your shortened URLs saved for future use!
+
+Permission based URL viewing
+  * Only you can see your saved URL's.
+  * Anyone can access the intended website through your ShortURL link.
+
+
+### <ins>CRUD Functionality</ins>
+* Create short URL's from full site addresses
+* View all your saved urls
+* Edit your shortURL's
+* Delete saved URLS
+
 ## <ins>Final Product</ins>
 
 
@@ -24,24 +43,7 @@ TinyApp is a Full-Stack Web application built on Node and Express!
 
 
 
-## <ins>Features</ins>
- Secure User Registration and Login system
-  * encrypted cookies
-  * Hashed and Salted passwords
 
- Account based URL storage
-  * Your shortened URLs saved for future use!
-
-Permission based URL viewing
-  * Only you can see your saved URL's.
-  * Anyone can access the intended website through your ShortURL link.
-
-
-### <ins>CRUD Functionality</ins>
-* Create short URL's from full site addresses
-* View all your saved urls
-* Edit your shortURL's
-* Delete saved URLS
 
 
 
