@@ -1,7 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -15,29 +14,29 @@ app.use(cookieSession({
   keys: ['key1', 'key2'],
 }))
 
+// //gen random string for shortURL
+// const generateRandomString = () => {
+//   return Math.random().toString(20).substr(2, 6);
+// };
+// const getUserByEmail = (email, database) => {
+//   for (let user in database) {
+//     if (database[user].email === email) {
+//       return database[user];
+//     }
+//   }
+//   return false;
+// };
+// //returns object of urls which match the cookie user_id
+// const urlsForUser = (id) => {
+//   const userUrls = {};
+//   for (let url in urlDatabase) {
+//     if (urlDatabase[url].userID === id) {
+//       userUrls[url] = urlDatabase[url];
+//     }
+//   }
+//   return userUrls;
+// };
 
-//gen random string for shortURL
-const generateRandomString = () => {
-  return Math.random().toString(20).substr(2, 6);
-};
-const doesKeyExistInUsers = (key, variable) => {
-  for (let user in users) {
-    if (users[user][key] === variable) {
-      return true;
-    }
-  }
-  return false;
-};
-//returns object of urls which match the cookie user_id
-const urlsForUser = (id) => {
-  const userUrls = {};
-  for (let url in urlDatabase) {
-    if (urlDatabase[url].userID === id) {
-      userUrls[url] = urlDatabase[url];
-    }
-  }
-  return userUrls;
-};
 
 // database object
 const urlDatabase = {
@@ -60,6 +59,9 @@ const users = {
   }
 };
 
+const { generateRandomString } = require('./helpers.js')
+const { getUserByEmail } = require('./helpers.js')
+const { urlsForUser } = require('./helpers.js')
 
 //handles root
 app.get("/", (req, res) => {
@@ -83,7 +85,7 @@ app.get('/login', (req, res) => {
 app.get('/urls', (req, res) => {
   //templatevars.urls updated based on cookie ID
   const templateVars = {
-    urls: urlsForUser(req.session.user_id),
+    urls: urlsForUser(req.session.user_id, urlDatabase),
     user_id: req.session.user_id,
     users
   };
@@ -144,7 +146,7 @@ app.get('/register', (req, res) => {
 
 //POST for registration
 app.post('/register', (req, res) => {
-  if (doesKeyExistInUsers('email', req.body.email)) {
+  if (getUserByEmail(req.body.email, users)) {
     res.status(400)
     res.send(`status code: ${res.statusCode} email already in use`);
     return;
@@ -209,13 +211,12 @@ app.post('/login', (req, res) => {
   let loginPass = req.body.password;
 
   //dry up this code with a function
-  if (loginEmail && loginPass) {
-    for (let user in users) {
-      if (users[user].email === loginEmail && bcrypt.compareSync(loginPass, users[user].password)) {
-        req.session.user_id = users[user].id;
-        res.redirect('/urls');
-        return;
-      }
+  if (getUserByEmail(loginEmail, users)) {
+    const loginUser = getUserByEmail(loginEmail, users)
+    if (bcrypt.compareSync(loginPass, loginUser.password)) {
+      req.session.user_id = loginUser.id;
+      res.redirect('/urls');
+      return;
     }
   }
   res.status(403)

@@ -2,21 +2,28 @@
 const generateRandomString = () => {
   return Math.random().toString(20).substr(2, 6);
 };
-const doesKeyExistInUsers = (key, variable) => {
-  for (let user in users) {
-    if (users[user][key] === variable) {
-      return true;
+
+const getUserByEmail = (email, database) => {
+  for (let user in database) {
+    if (database[user].email === email) {
+      return database[user];
     }
   }
   return false;
 };
 //returns object of urls which match the cookie user_id
-const urlsForUser = (id) => {
+const urlsForUser = (id, database) => {
   const userUrls = {};
-  for (let url in urlDatabase) {
-    if (urlDatabase[url].userID === id) {
-      userUrls[url] = urlDatabase[url];
+  for (let item in database) {
+    if (database[item].userID === id) {
+      userUrls[item] = database[item];
     }
   }
   return userUrls;
 };
+
+module.exports = {
+  generateRandomString,
+  getUserByEmail,
+  urlsForUser
+}
