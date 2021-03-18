@@ -3,6 +3,13 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+
+//----Helper Functions----//
+const { generateRandomString } = require('./helpers.js')
+const { getUserByEmail } = require('./helpers.js')
+const { urlsForUser } = require('./helpers.js')
+
+
 const app = express();
 const PORT = 8080;
 
@@ -14,14 +21,14 @@ app.use(cookieSession({
   keys: ['key1', 'key2'],
 }))
 
-// database object
+//----DATA----//
+
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: 'defaut' },
   "9sm5xK": { longURL: "http://www.google.com", userID: 'default' }
 };
 
 
-//users object
 const users = {
   'userRandomID': {
     id: "userRandomID",
@@ -35,13 +42,17 @@ const users = {
   }
 };
 
-const { generateRandomString } = require('./helpers.js')
-const { getUserByEmail } = require('./helpers.js')
-const { urlsForUser } = require('./helpers.js')
+
+//------ROUTING------//
 
 //handles root
 app.get("/", (req, res) => {
-  res.send('<html><body><h1>Hello Root!</h1></body></html>\n');
+  if (!req.session.user_id) {
+    res.redirect('/login');
+
+    return;
+  }
+  res.redirect('/urls');;
 });
 
 app.get("/hello", (req, res) => {
