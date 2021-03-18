@@ -190,7 +190,7 @@ app.post("/urls", (req, res) => {
 });
 
 //post handler for editing longurl
-app.post('/urls/:shortURL', (req, res) => {
+app.patch('/urls/:shortURL', (req, res) => {
   if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     urlDatabase[req.params.shortURL].longURL = req.body.updateURL;
     res.redirect(`/urls`);
@@ -200,8 +200,8 @@ app.post('/urls/:shortURL', (req, res) => {
   res.render('invalid_short');
 });
 
-//post handler for delete
-app.post('/urls/:shortURL/delete', (req, res) => {
+//URL deletion
+app.delete('/urls/:shortURL/delete', (req, res) => {
   if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     delete urlDatabase[req.params.shortURL];
     res.redirect('/urls');
@@ -236,7 +236,7 @@ app.post('/login', (req, res) => {
 });
 
 //POST handler for /logout
-app.post('/logout', (req, res) => {
+app.delete('/logout', (req, res) => {
   req.session = null;
   res.redirect('/login');
 });
