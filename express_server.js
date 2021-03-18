@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
-}))
+}));
 
 //----DATA----//
 
@@ -60,19 +60,19 @@ app.get("/hello", (req, res) => {
 
 //GET Login
 app.get('/login', (req, res) => {
-  const incorrectInfo = false
+  const incorrectInfo = false;
   const templateVars = {
     user_id: req.session.user_id,
     users,
     incorrectInfo,
     notLoggedIn: false
-  }
+  };
   if (req.session.user_id) {
     res.redirect('/urls');
     return;
   }
-  res.render('login', templateVars)
-})
+  res.render('login', templateVars);
+});
 
 //GET for URLS
 app.get('/urls', (req, res) => {
@@ -84,8 +84,8 @@ app.get('/urls', (req, res) => {
     incorrectInfo: false,
   };
   if (!req.session.user_id) {
-    templateVars['notLoggedIn'] = true,
-      res.render('login', templateVars);
+    templateVars['notLoggedIn'] = true;
+    res.render('login', templateVars);
     return;
   }
   res.render('urls_index', templateVars);
@@ -103,9 +103,9 @@ app.get("/urls/new", (req, res) => {
   const templateVars = {
     user_id: req.session.user_id,
     users
-  }
+  };
   res.render('urls_new', templateVars);
-})
+});
 
 //GET URL SHOW from /urls/:shortURL
 app.get('/urls/:shortURL', (req, res) => {
@@ -120,12 +120,12 @@ app.get('/urls/:shortURL', (req, res) => {
       longURL: urlDatabase[req.params.shortURL].longURL,
       user_id: req.session.user_id,
       users
-    }
+    };
     res.render('urls_show', templateVars);
-    return
+    return;
   }
-  res.status(401)
-  res.render('invalid_short')
+  res.status(401);
+  res.render('invalid_short');
 });
 
 //GET for registration
@@ -135,14 +135,14 @@ app.get('/register', (req, res) => {
     user_id: req.session.user_id,
     users,
     emailInUse
-  }
+  };
   //if already logged in, redirect to /urls
   if (req.session.user_id) {
     res.redirect('/urls');
     return;
   }
-  res.render('registration', templateVars)
-})
+  res.render('registration', templateVars);
+});
 
 //POST for registration
 app.post('/register', (req, res) => {
@@ -152,13 +152,13 @@ app.post('/register', (req, res) => {
       user_id: req.session.user_id,
       users,
       emailInUse
-    }
-    res.status(400)
+    };
+    res.status(400);
     res.render(`registration`, templateVars);
     return;
   }
   if (req.body.email.length < 1 || req.body.password.length < 1) {
-    res.status(400)
+    res.status(400);
     res.send(`status code: ${res.statusCode} You must register with a valid Email and password`);
     return;
   }
@@ -190,13 +190,13 @@ app.post("/urls", (req, res) => {
 //post handler for editing longurl
 app.post('/urls/:shortURL', (req, res) => {
   if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
-    urlDatabase[req.params.shortURL].longURL = req.body.updateURL
+    urlDatabase[req.params.shortURL].longURL = req.body.updateURL;
     res.redirect(`/urls`);
     return;
   }
-  res.status(401)
-  res.render('invalid_short')
-})
+  res.status(401);
+  res.render('invalid_short');
+});
 
 //post handler for delete
 app.post('/urls/:shortURL/delete', (req, res) => {
@@ -205,8 +205,8 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     res.redirect('/urls');
     return;
   }
-  res.status(401)
-  res.render('invalid_short')
+  res.status(401);
+  res.render('invalid_short');
 });
 
 //POST handler for /login
@@ -215,7 +215,7 @@ app.post('/login', (req, res) => {
   let loginPass = req.body.password;
 
   if (getUserByEmail(loginEmail, users)) {
-    const loginUser = getUserByEmail(loginEmail, users)
+    const loginUser = getUserByEmail(loginEmail, users);
     if (bcrypt.compareSync(loginPass, loginUser.password)) {
       req.session.user_id = loginUser.id;
       res.redirect('/urls');
@@ -227,8 +227,8 @@ app.post('/login', (req, res) => {
     user_id: req.session.user_id,
     users,
     notLoggedIn: false
-  }
-  res.status(403)
+  };
+  res.status(403);
   res.render('login', templateVars);
   return;
 });
@@ -237,7 +237,7 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   req.session = null;
   res.redirect('/login');
-})
+});
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
 app.get('/u/:shortURL', (req, res) => {
