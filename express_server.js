@@ -19,8 +19,9 @@ const { urlsForUser } = require('./helpers.js');
 
 const app = express();
 const PORT = 8080;
-
 app.set("view engine", "ejs");
+
+app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
@@ -168,6 +169,8 @@ app.get('/register', (req, res) => {
 
 
 app.post('/register', (req, res) => {
+
+  //If email already exists
   if (getUserByEmail(req.body.email, users)) {
     const emailInUse = true;
     const templateVars = {
