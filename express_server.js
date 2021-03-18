@@ -64,7 +64,8 @@ app.get('/login', (req, res) => {
   const templateVars = {
     user_id: req.session.user_id,
     users,
-    incorrectInfo
+    incorrectInfo,
+    notLoggedIn: false
   }
   if (req.session.user_id) {
     res.redirect('/urls');
@@ -79,9 +80,15 @@ app.get('/urls', (req, res) => {
   const templateVars = {
     urls: urlsForUser(req.session.user_id, urlDatabase),
     user_id: req.session.user_id,
-    users
+    users,
+    incorrectInfo: false,
   };
-
+  if (!req.session.user_id) {
+    templateVars['notLoggedIn'] = true,
+      console.log(templateVars)
+    res.render('login', templateVars)
+    return
+  }
   res.render('urls_index', templateVars);
 });
 
@@ -124,9 +131,11 @@ app.get('/urls/:shortURL', (req, res) => {
 
 //GET for registration
 app.get('/register', (req, res) => {
+  const emailInUse = false;
   const templateVars = {
     user_id: req.session.user_id,
-    users
+    users,
+    emailInUse
   }
   //if already logged in, redirect to /urls
   if (req.session.user_id) {
@@ -139,8 +148,14 @@ app.get('/register', (req, res) => {
 //POST for registration
 app.post('/register', (req, res) => {
   if (getUserByEmail(req.body.email, users)) {
+    const emailInUse = true;
+    const templateVars = {
+      user_id: req.session.user_id,
+      users,
+      emailInUse
+    }
     res.status(400)
-    res.send(`status code: ${res.statusCode} email already in use`);
+    res.render(`registration`, templateVars);
     return;
   }
   if (req.body.email.length < 1 || req.body.password.length < 1) {
@@ -214,6 +229,7 @@ app.post('/login', (req, res) => {
     incorrectInfo: true,
     user_id: req.session.user_id,
     users,
+    notLoggedIn: false
   }
   res.status(403)
   res.render('login', templateVars);
@@ -223,7 +239,7 @@ app.post('/login', (req, res) => {
 //POST handler for /logout
 app.post('/logout', (req, res) => {
   req.session = null;
-  res.redirect('/urls');
+  res.redirect('/login');
 })
 
 //will forward to LongURL based on short URL, if short url exists in urlDatabase
