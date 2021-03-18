@@ -24,7 +24,7 @@ describe('getUserByEmail', () => {
   });
   it('should return false if it cannot find a matching email in the database', () => {
     const user = getUserByEmail('cat@cat.com', testUsers);
-    assert.isFalse(user);
+    assert.isUndefined(user);
   });
 });
 

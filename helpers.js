@@ -9,7 +9,7 @@ const getUserByEmail = (email, database) => {
       return database[user];
     }
   }
-  return false;
+  return undefined;
 };
 //returns object of urls which match the cookie user_id
 const urlsForUser = (id, database) => {
