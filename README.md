@@ -1,6 +1,6 @@
 # TinyApp Project
 
-TinyApp is a Full-Stack Web application built on Node and Express!
+TinyApp is a Full-Stack RESTful Web application built on Node and Express!
 * It allows users to shorten URLs!
 
 ## <ins>Features</ins>
@@ -15,12 +15,14 @@ Permission based URL viewing
   * Only you can see your saved URL's.
   * Anyone can access the intended website through your ShortURL link.
 
+Utilize method-override to follow REST conventions.
 
-### <ins>CRUD Functionality</ins>
-* Create short URL's from full site addresses
-* View all your saved urls
-* Edit your shortURL's
-* Delete saved URLS
+### <ins>BREAD Functionality</ins>
+* Browse all your saved URL's
+* Read specific URL info
+* Edit you your saved urls
+* Add new URLs
+* Delete your saved URLS
 
 ## <ins>Final Product</ins>
 
@@ -56,6 +58,7 @@ Permission based URL viewing
 - cookie-session
 - EJS
 - morgan
+- Method-Override
 
 ## Getting Started
 
