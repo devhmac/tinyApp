@@ -14,30 +14,6 @@ app.use(cookieSession({
   keys: ['key1', 'key2'],
 }))
 
-// //gen random string for shortURL
-// const generateRandomString = () => {
-//   return Math.random().toString(20).substr(2, 6);
-// };
-// const getUserByEmail = (email, database) => {
-//   for (let user in database) {
-//     if (database[user].email === email) {
-//       return database[user];
-//     }
-//   }
-//   return false;
-// };
-// //returns object of urls which match the cookie user_id
-// const urlsForUser = (id) => {
-//   const userUrls = {};
-//   for (let url in urlDatabase) {
-//     if (urlDatabase[url].userID === id) {
-//       userUrls[url] = urlDatabase[url];
-//     }
-//   }
-//   return userUrls;
-// };
-
-
 // database object
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: 'defaut' },
