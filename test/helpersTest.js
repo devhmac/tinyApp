@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { generateRandomString, getUserByEmail, urlsForUser } = require('../helpers');
+const { getUserByEmail, urlsForUser } = require('../helpers');
 
 const testUsers = {
   "userRandomID": {
@@ -26,5 +26,28 @@ describe('getUserByEmail', () => {
     const user = getUserByEmail('cat@cat.com', testUsers);
     assert.isFalse(user);
   });
-
 });
+
+const testUrls = {
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: 'defaut' },
+  "9sm5xK": { longURL: "http://www.google.com", userID: '1234' },
+  "7asdf3": { longURL: "http://www.twitter.com", userID: '1234' }
+};
+
+
+describe('urlsForUser', () => {
+  it('should return an object of URL\'s with userID: matching argument id', () => {
+    const output = urlsForUser('1234', testUrls)
+    const expectedOutput = {
+      "9sm5xK": { longURL: "http://www.google.com", userID: '1234' },
+      "7asdf3": { longURL: "http://www.twitter.com", userID: '1234' }
+    };
+    assert.deepEqual(output, expectedOutput)
+  })
+  it('should return an empty object if no userID keys match id arg', () => {
+    const output = urlsForUser('hello', testUrls)
+    const expectedOutput = {};
+    assert.deepEqual(output, expectedOutput)
+  })
+
+})
