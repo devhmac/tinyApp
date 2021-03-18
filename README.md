@@ -10,10 +10,10 @@ TinyApp is a Full-Stack Web application built on Node and Express, allowing user
 |------------|-------------|
 | <img src=https://user-images.githubusercontent.com/52307383/111701353-52797080-8800-11eb-869b-09e097d1082b.png width="300">| <img src=https://user-images.githubusercontent.com/52307383/111701397-658c4080-8800-11eb-89d3-0d87232c93a1.png width="300"> |
 
-*My URLs*
 
-<img src=https://user-images.githubusercontent.com/52307383/111699857-44c2eb80-87fe-11eb-82ea-441bc42da220.png width="630">
-
+| *My URLs*   | 
+|------------|
+| <img src=https://user-images.githubusercontent.com/52307383/111699857-44c2eb80-87fe-11eb-82ea-441bc42da220.png width="620"> |
 
 
 | *Create URLs*     | *Edit URLs*      |
