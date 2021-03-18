@@ -5,9 +5,9 @@ const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
 //----Helper Functions----//
-const { generateRandomString } = require('./helpers.js')
-const { getUserByEmail } = require('./helpers.js')
-const { urlsForUser } = require('./helpers.js')
+const { generateRandomString } = require('./helpers.js');
+const { getUserByEmail } = require('./helpers.js');
+const { urlsForUser } = require('./helpers.js');
 
 
 const app = express();
@@ -85,9 +85,8 @@ app.get('/urls', (req, res) => {
   };
   if (!req.session.user_id) {
     templateVars['notLoggedIn'] = true,
-      console.log(templateVars)
-    res.render('login', templateVars)
-    return
+      res.render('login', templateVars);
+    return;
   }
   res.render('urls_index', templateVars);
 });
@@ -172,7 +171,6 @@ app.post('/register', (req, res) => {
     password: hashedPass
   };
   req.session.user_id = users[randID].id;
-  //console.log(users)
   res.redirect('/urls');
 });
 
@@ -186,7 +184,6 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = {
     longURL: req.body.longURL, userID: req.session.user_id
   };
-  // console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);
 });
 
