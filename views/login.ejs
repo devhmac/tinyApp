@@ -8,6 +8,7 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
+    <link rel="stylesheet" href="../stylesheets/loginreg.css">
 
   <style>
     html {
@@ -46,7 +47,7 @@
               <% if (notLoggedIn) {%>
                 <p class="text-danger text-center">* You must be logged in to access My URLs</p>
                 <% } %>
-                  <form id="login-form" class="form" action="/login" method="POST">
+                  <form id="login-form" class="form login-form" action="/login" method="POST">
                     <h3 class="text-center text-info">Login</h3>
                     <div class="form-group">
                       <label for="email" class="text-info">Email:</label><br>
