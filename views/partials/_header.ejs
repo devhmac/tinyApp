@@ -14,7 +14,7 @@
     <% if(users[user_id]) { %>
       <form action="/logout?_method=DELETE" class="form-inline" method="POST">
         <span class="navbar-text" style="margin-right: 0.2rem;">Welcome: </span>
-        <span class="text-white">
+        <span class="text-white"style="padding-right: 0.2rem;" >
           <%= users[user_id].email %>
         </span>
         <button type="submit" class="btn btn-danger">Logout</button>
