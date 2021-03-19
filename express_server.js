@@ -54,7 +54,6 @@ const users = {
 
 //------ROUTING------//
 
-
 app.get("/", (req, res) => {
 
   //if not logged in
@@ -99,8 +98,6 @@ app.get("/urls/new", (req, res) => {
   };
   res.render('urls_new', templateVars);
 });
-
-//GET URL SHOW from /urls/:shortURL
 
 
 // ---- Login Routes ----//
